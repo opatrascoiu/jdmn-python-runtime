@@ -16,14 +16,24 @@ from jdmn.runtime.annotation.Annotation import Annotation
 
 
 class AnnotationSet(list):
-    def addAnnotation(self, decisionName: str, ruleIndex: int, annotation: Union[str, List[str]]) -> None:
+    def addAnnotation(self, decisionName: str, ruleIndex: int, annotationName: str = None,
+                      annotation: Union[str, List[str]] = None) -> None:
+        # Handle case where annotationName is actually the annotation (overloaded behavior)
+        if annotation is None and annotationName is not None:
+            annotation = annotationName
+            annotationName = None
+
+        # Handle list annotations
         if isinstance(annotation, list):
-            if not (annotation is None) and not len(annotation) == 0:
+            if annotation:  # If non-empty
                 annotation = " ".join(annotation)
-                self.addAnnotation(decisionName, ruleIndex, annotation)
+                self.addAnnotation(decisionName, ruleIndex, annotationName, annotation)
         elif annotation:
             # Rules index starts from 0
-            element = Annotation(decisionName, ruleIndex + 1, annotation)
+            if annotationName is None:
+                element = Annotation(decisionName, ruleIndex + 1, annotation)
+            else:
+                element = Annotation(decisionName, ruleIndex + 1, annotationName + "#" + annotation)
             self.append(element)
 
     def toSet(self) -> Set[Annotation]:
