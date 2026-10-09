@@ -13,7 +13,7 @@
 from unittest import TestCase
 
 from jdmn.runtime.annotation.AnnotationSet import AnnotationSet
-from jdmn.runtime.annotation.Annotation import Annotation
+
 
 class AnnotationSetTest(TestCase):
 
